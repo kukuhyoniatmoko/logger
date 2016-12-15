@@ -1,98 +1,123 @@
 package com.foodenak.logger
 
-import java.util.*
+object Log : Logger() {
 
-object Log {
-    @JvmStatic fun v(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.v(throwable, tag, message, args)
+    /**
+     * Log with [Priority.VERBOSE]
+     */
+    override fun v(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.v(throwable, message, args)
     }
 
-    @JvmStatic fun d(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.d(throwable, tag, message, args)
+    /**
+     * Log with [Priority.DEBUG]
+     */
+    override fun d(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.d(throwable, message, args)
     }
 
-    @JvmStatic fun i(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.i(throwable, tag, message, args)
+    /**
+     * Log with [Priority.INFO]
+     */
+    override fun i(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.i(throwable, message, args)
     }
 
-    @JvmStatic fun w(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.w(throwable, tag, message, args)
+    /**
+     * Log with [Priority.WARNING]
+     */
+    override fun w(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.w(throwable, message, args)
     }
 
-    @JvmStatic fun e(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.e(throwable, tag, message, args)
+    /**
+     * Log with [Priority.ERROR]
+     */
+    override fun e(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.e(throwable, message, args)
     }
 
-    @JvmStatic fun wtf(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.wtf(throwable, tag, message, args)
+    /**
+     * Log with [Priority.ASSERT]
+     */
+    override fun wtf(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.wtf(throwable, message, args)
     }
 
-    @JvmStatic fun log(priority: Priority, throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        LOGGERS.log(priority, throwable, tag, message, args)
+    /**
+     * Log with [priority]
+     * @param priority Priority of Log
+     */
+    override fun log(priority: Priority, throwable: Throwable?, message: String?, args: Array<out Any?>) {
+        val loggers = loggerArray
+        for (logger in loggers) logger.log(priority, throwable, message, args)
     }
 
-    private val EMPTY_LOGGER_ARRAY = arrayOf<Logger>()
+    /**
+     * Don't use this method, use [d],[i],[w],[e],[wtf], or [log] instead
+     *
+     * @throws [AssertionError]
+     */
+    override fun println(priority: Priority, tag: String?, message: String) {
+        throw AssertionError("Missing override!")
+    }
 
-    private val LOGGER_LIST = HashSet<Logger>()
-    private var LOGGER_ARRAY = EMPTY_LOGGER_ARRAY
+    /**
+     * Set a one-time tag to be used on the next logging
+     *
+     * @param tag Tag to be used
+     *
+     * @return [Log] to be easily used in chain
+     */
+    @JvmStatic fun tag(tag: String): Log {
+        val loggers = loggerArray
+        for (logger in loggers) logger.explicitTag.set(tag)
+        return this
+    }
 
+    internal val emptyLoggerArray = arrayOf<Logger>()
+    internal val loggerList = mutableListOf<Logger>()
+    internal var loggerArray = emptyLoggerArray
+
+    /**
+     * Add new [Logger]
+     *
+     * @param logger [Logger] to add
+     *
+     * @throws IllegalArgumentException if [logger] is [Log] itself
+     */
     @JvmStatic fun add(logger: Logger) {
-        if (logger == LOGGERS) throw IllegalArgumentException()
-        synchronized(LOGGER_LIST) {
-            LOGGER_LIST.add(logger)
-            LOGGER_ARRAY = LOGGER_LIST.toTypedArray()
+        if (logger === this) throw IllegalArgumentException("Can't add Log into itself.")
+        synchronized(loggerList) {
+            loggerList.add(logger)
+            loggerArray = loggerList.toTypedArray()
         }
     }
 
+    /**
+     * Remove previously added [Logger]
+     *
+     * @param logger [Logger] to remove
+     *
+     * @throws IllegalStateException if [logger] id not added yet
+     */
     @JvmStatic fun remove(logger: Logger) {
-        synchronized(LOGGER_LIST) {
-            if (!LOGGER_LIST.remove(logger)) throw IllegalStateException()
-            LOGGER_ARRAY = if (LOGGER_LIST.isEmpty()) EMPTY_LOGGER_ARRAY else LOGGER_LIST.toTypedArray()
+        synchronized(loggerList) {
+            if (!loggerList.remove(logger)) throw IllegalStateException("Logger is not added yet.")
+            loggerArray = if (loggerList.isEmpty()) emptyLoggerArray else loggerList.toTypedArray()
         }
     }
 
-    @JvmStatic fun asLogger(): Logger = LOGGERS
-
-    @JvmStatic fun loggers(): List<Logger> = listOf(*LOGGER_ARRAY)
-
-    private val LOGGERS = object : Logger() {
-        override fun v(throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.v(throwable, tag, message, args)
-        }
-
-        override fun d(throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.d(throwable, tag, message, args)
-        }
-
-        override fun i(throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.i(throwable, tag, message, args)
-        }
-
-        override fun w(throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.w(throwable, tag, message, args)
-        }
-
-        override fun e(throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.e(throwable, tag, message, args)
-        }
-
-        override fun wtf(throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.wtf(throwable, tag, message, args)
-        }
-
-        override fun log(priority: Priority, throwable: Throwable?, tag: String?, message: String?, args: Array<String>) {
-            val loggers = LOGGER_ARRAY
-            for (logger in loggers) logger.log(priority, throwable, tag, message, args)
-        }
-
-        override fun log(priority: Priority, tag: String?, message: String) {
-            throw AssertionError("Missing override!")
-        }
-    }
+    /**
+     * Return all added [Logger]
+     *
+     * @return [List] of added [Logger]
+     */
+    @JvmStatic fun loggers(): List<Logger> = listOf(*loggerArray)
 }

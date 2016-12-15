@@ -4,39 +4,63 @@ import java.io.PrintWriter
 import java.io.StringWriter
 
 abstract class Logger {
-    open internal fun v(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(Priority.VERBOSE, throwable, tag, message, args)
-    }
 
-    open internal fun d(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(Priority.DEBUG, throwable, tag, message, args)
-    }
+    /**
+     * Print message into log output
+     *
+     * @param priority Log [Priority]
+     * @param tag Log tag
+     * @param message Log message
+     */
+    abstract protected fun println(priority: Priority, tag: String?, message: String)
 
-    open internal fun i(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(Priority.INFO, throwable, tag, message, args)
-    }
-
-    open internal fun w(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(Priority.WARNING, throwable, tag, message, args)
-    }
-
-    open internal fun e(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(Priority.ERROR, throwable, tag, message, args)
-    }
-
-    open internal fun wtf(throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(Priority.ASSERT, throwable, tag, message, args)
-    }
-
-    open internal fun log(priority: Priority, throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
-        prepare(priority, throwable, tag, message, args)
-    }
-
+    /**
+     * Check if [Priority] is loggable
+     *
+     * @return true if the [Priority] is loggable
+     */
     open fun isLoggable(priority: Priority): Boolean = true
 
-    private fun prepare(priority: Priority, throwable: Throwable? = null, tag: String? = null, message: String? = null, args: Array<String> = arrayOf()) {
+    internal val explicitTag = ThreadLocal<String>()
+
+    open internal fun v(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(Priority.VERBOSE, throwable, message, args)
+    }
+
+    open internal fun d(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(Priority.DEBUG, throwable, message, args)
+    }
+
+    open internal fun i(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(Priority.INFO, throwable, message, args)
+    }
+
+    open internal fun w(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(Priority.WARNING, throwable, message, args)
+    }
+
+    open internal fun e(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(Priority.ERROR, throwable, message, args)
+    }
+
+    open internal fun wtf(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(Priority.ASSERT, throwable, message, args)
+    }
+
+    open internal fun log(priority: Priority, throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        prepare(priority, throwable, message, args)
+    }
+
+    open internal fun getTag(): String? {
+        val tag = explicitTag.get()
+        if (tag != null) explicitTag.remove()
+        return tag
+    }
+
+    private fun prepare(priority: Priority, throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+        val tag = getTag()
         if (!isLoggable(priority)) return
-        val preparedMessage = (if (message == null || message.length <= 0) {
+        val preparedMessage = (if (message == null || message.isEmpty()) {
             if (throwable == null) null else {
                 extractStackTrace(throwable)
             }
@@ -47,10 +71,8 @@ abstract class Logger {
                 "${String.format(message, *args)}\n${extractStackTrace(throwable)}"
             }
         }) ?: return
-        log(priority, tag, preparedMessage)
+        println(priority, tag, preparedMessage)
     }
-
-    abstract fun log(priority: Priority, tag: String?, message: String)
 
     private fun extractStackTrace(throwable: Throwable): String? {
         val writer = StringWriter(256)
