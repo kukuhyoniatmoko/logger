@@ -1,5 +1,5 @@
 #logger
-[![](https://jitpack.io/v/kukuhyoniatmoko/logger.svg)](https://jitpack.io/#kukuhyoniatmoko/logger) [![CircleCI](https://circleci.com/gh/kukuhyoniatmoko/logger.svg?style=svg)](https://circleci.com/gh/kukuhyoniatmoko/logger)
+[![](https://jitpack.io/v/kukuhyoniatmoko/logger.svg)](https://jitpack.io/#kukuhyoniatmoko/logger) [![CircleCI](https://circleci.com/gh/kukuhyoniatmoko/logger.svg?style=shield&circle-token=:circle-ci-badge-token)](https://circleci.com/gh/kukuhyoniatmoko/logger)
 
 
 ##Install
