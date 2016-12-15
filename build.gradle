@@ -2,10 +2,10 @@ group 'logger'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.0.3'
+    ext.kotlin_version = '1.0.5-2'
 
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -15,9 +15,11 @@ buildscript {
 apply plugin: 'kotlin'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    testCompile 'junit:junit:4.12'
 }
