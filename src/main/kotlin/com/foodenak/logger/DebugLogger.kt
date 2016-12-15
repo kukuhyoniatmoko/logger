@@ -7,6 +7,7 @@ import java.util.regex.Pattern
  * Do not use [this][DebugLogger] with proguard enabled
  */
 abstract class DebugLogger() : Logger() {
+
     override public final fun getTag(): String {
         val tag = super.getTag()
         if (tag != null) return tag
@@ -20,6 +21,6 @@ abstract class DebugLogger() : Logger() {
 
     companion object {
         private val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
-        private const val CALL_STACK_INDEX = 7
+        private const val CALL_STACK_INDEX = 6
     }
 }

@@ -5,6 +5,22 @@ import java.io.StringWriter
 
 abstract class Logger {
 
+    /**
+     * Print message into log output
+     *
+     * @param priority Log [Priority]
+     * @param tag Log tag
+     * @param message Log message
+     */
+    abstract protected fun println(priority: Priority, tag: String?, message: String)
+
+    /**
+     * Check if [Priority] is loggable
+     *
+     * @return true if the [Priority] is loggable
+     */
+    open fun isLoggable(priority: Priority): Boolean = true
+
     internal val explicitTag = ThreadLocal<String>()
 
     open internal fun v(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
@@ -35,8 +51,6 @@ abstract class Logger {
         prepare(priority, throwable, message, args)
     }
 
-    open fun isLoggable(priority: Priority): Boolean = true
-
     open internal fun getTag(): String? {
         val tag = explicitTag.get()
         if (tag != null) explicitTag.remove()
@@ -59,8 +73,6 @@ abstract class Logger {
         }) ?: return
         println(priority, tag, preparedMessage)
     }
-
-    abstract protected fun println(priority: Priority, tag: String?, message: String)
 
     private fun extractStackTrace(throwable: Throwable): String? {
         val writer = StringWriter(256)
