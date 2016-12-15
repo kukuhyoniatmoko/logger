@@ -31,4 +31,4 @@ Log.d(exception, "Very bad error!");
 
 Log.tag("MyTag").d(exception, "Error!");
 ```
-You can subclass [DebugLogger](https://github.com) which automatically use caller class name as tag
+You can subclass [DebugLogger](https://github.com/kukuhyoniatmoko/logger/blob/master/src/main/kotlin/com/foodenak/logger/DebugLogger.kt) which automatically use caller class name as tag
