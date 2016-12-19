@@ -5,7 +5,7 @@ object Log : Logger() {
     /**
      * Log with [Priority.VERBOSE]
      */
-    override public fun v(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun v(throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.v(throwable, message, args)
     }
@@ -13,7 +13,7 @@ object Log : Logger() {
     /**
      * Log with [Priority.DEBUG]
      */
-    override public fun d(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun d(throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.d(throwable, message, args)
     }
@@ -21,7 +21,7 @@ object Log : Logger() {
     /**
      * Log with [Priority.INFO]
      */
-    override public fun i(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun i(throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.i(throwable, message, args)
     }
@@ -29,7 +29,7 @@ object Log : Logger() {
     /**
      * Log with [Priority.WARNING]
      */
-    override public fun w(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun w(throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.w(throwable, message, args)
     }
@@ -37,7 +37,7 @@ object Log : Logger() {
     /**
      * Log with [Priority.ERROR]
      */
-    override public fun e(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun e(throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.e(throwable, message, args)
     }
@@ -45,7 +45,7 @@ object Log : Logger() {
     /**
      * Log with [Priority.ASSERT]
      */
-    override public fun wtf(throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun wtf(throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.wtf(throwable, message, args)
     }
@@ -54,7 +54,7 @@ object Log : Logger() {
      * Log with [priority]
      * @param priority Priority of Log
      */
-    override public fun log(priority: Priority, throwable: Throwable?, message: String?, args: Array<out Any?>) {
+    override fun log(priority: Priority, throwable: Throwable?, message: String?, args: Array<out Any?>) {
         val loggers = loggerArray
         for (logger in loggers) logger.log(priority, throwable, message, args)
     }

@@ -21,6 +21,6 @@ abstract class DebugLogger() : Logger() {
 
     companion object {
         private val ANONYMOUS_CLASS = Pattern.compile("(\\$\\d+)+$")
-        private const val CALL_STACK_INDEX = 6
+        private const val CALL_STACK_INDEX = 5
     }
 }

@@ -23,35 +23,35 @@ abstract class Logger {
 
     internal val explicitTag = ThreadLocal<String>()
 
-    open internal fun v(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun v(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(Priority.VERBOSE, throwable, message, args)
     }
 
-    open internal fun d(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun d(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(Priority.DEBUG, throwable, message, args)
     }
 
-    open internal fun i(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun i(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(Priority.INFO, throwable, message, args)
     }
 
-    open internal fun w(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun w(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(Priority.WARNING, throwable, message, args)
     }
 
-    open internal fun e(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun e(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(Priority.ERROR, throwable, message, args)
     }
 
-    open internal fun wtf(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun wtf(throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(Priority.ASSERT, throwable, message, args)
     }
 
-    open internal fun log(priority: Priority, throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
+    open fun log(priority: Priority, throwable: Throwable? = null, message: String? = null, args: Array<out Any?> = arrayOf()) {
         prepare(priority, throwable, message, args)
     }
 
-    open internal fun getTag(): String? {
+    open fun getTag(): String? {
         val tag = explicitTag.get()
         if (tag != null) explicitTag.remove()
         return tag
